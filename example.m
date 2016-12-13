@@ -1,16 +1,18 @@
 %% Example use of the DDet
+addpath(genpath('/Users/Xu/tool/vlfeat-0.9.20/toolbox/'));
+addpath(genpath('/Users/Xu/tool/matconvnet-1.0-beta15/matlab/'));
 setup();
 
 %% Detect the features
 
-net_name = 'detnet_s2.mat';
+net_name = 'detnet_s4.mat';
 net = dagnn.DagNN.loadobj(load(fullfile('nets', net_name)));
 
 % Uncomment the following lines to compute on a GPU
 % (works only if MatConvNet compiled with GPU support)
 % gpuDevice(1);  net.move('gpu');
 
-detector = DDet(net, 'thr', 4);
+detector = DDet(net, 'thr', 0);
 
 im = vl_impattern('box');
 [frames, ~, info] = detector.detect(im);

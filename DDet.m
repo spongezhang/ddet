@@ -11,7 +11,7 @@ classdef DDet < handle
 % the terms of the BSD license (see the COPYING file).
   
   properties (SetAccess=public, GetAccess=public)
-    Opts = struct('thr',3, 'defscale', 3);
+    Opts = struct('thr',3, 'defscale', 16);
     Net
     Args;
   end
@@ -37,7 +37,7 @@ classdef DDet < handle
       [obj.Opts, obj.Args] = vl_argparse(obj.Opts, varargin);
     end
     
-    function [frames, desc, info] = detect(obj, im)
+    function [frames, desc, info] = detect(obj, im, number)
       %DETECT Detect local features in image im.
       %  FMS = obj.detect(im) Detect features in image im.
       %  [FMS, ~, INFO] obj.detect(im) Additionally returns an info
@@ -67,8 +67,9 @@ classdef DDet < handle
       [pts_y, pts_x] = find(pts);
       pts_value = im_accum(pts);
       pts = [pts_x(:) pts_y(:)]';
-      
-      frames_sel = pts_value > obj.Opts.thr;
+      [~,ind] = sort(pts_value,'descend');
+      %frames_sel = pts_value > obj.Opts.thr;
+      frames_sel = ind(1:ceil(min(number,size(pts_value,1))));
       frames = pts(:, frames_sel);
       
       info = struct('im_accum', im_accum);
